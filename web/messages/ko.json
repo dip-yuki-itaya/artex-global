@@ -1906,7 +1906,13 @@
     "errorCount": "{count} 오류",
     "loading": "불러오는 중…",
     "loadOlder": "이전 로그 더 보기",
-    "empty": "로그가 없습니다."
+    "empty": "로그가 없습니다.",
+    "mock": {
+      "plan": "task t-acme-web: 계획 3라운드, 의도 i-4 생성",
+      "scope": "block bash: 범위 이탈, out.evil.example 는 scope 밖",
+      "saved": "report_finding: Default Credentials (high) 저장 완료",
+      "intercept": "intercept: mysqldump 파괴적 규칙 적중, 사람 승인 대기"
+    }
   },
   "mcpPage": {
     "subtitle": "외부 MCP 도구 서버 · 에이전트별로 노출 허용",
@@ -2907,7 +2913,8 @@
       "renameFailed": "이름 변경 실패: {msg}",
       "pinFailed": "고정 실패: {msg}",
       "unpinFailed": "고정 해제 실패: {msg}"
-    }
+    },
+    "agentFallback": "에이전트"
   },
   "linkTraffic": {
     "title": "취약점에 연결",
@@ -3760,5 +3767,15 @@
       "name": "취약점 재검증",
       "description": "취약점 상세에서 수동으로 시작해, 원래 증거를 읽고 독립적인 재검증 결론을 저장합니다."
     }
+  },
+  "apiErrors": {
+    "unauthorized": "인증되지 않았습니다",
+    "uploadFailed": "업로드 실패: {status}",
+    "downloadFailed": "다운로드 실패",
+    "downloadFailedStatus": "다운로드 실패: {status}"
+  },
+  "mockData": {
+    "downloadSample": "(demo) {path} 의 다운로드 내용 예시입니다.",
+    "report": "# ARTEX 침투 테스트 보고서: Acme Corp\n\n## 개요\n- 범위: acme.com (www / admin / api / shop / vpn 서브도메인 포함)\n- 확인된 발견: 6건 (고위험 3 · 중위험 3 · 저위험 2)\n- 엔진 모드: exploring\n\n## 주요 발견\n1. **[높음] 백오피스 기본 비밀번호** admin.acme.com admin/admin123 → 백오피스를 완전히 장악할 수 있습니다.\n2. **[높음] SQL 인젝션** www.acme.com/search?q= → acme_prod 데이터베이스를 읽을 수 있습니다.\n3. **[높음] IDOR** api.acme.com/v1/orders?id= → 권한을 우회해 타인의 주문(휴대폰 번호/주소 포함)을 읽을 수 있습니다.\n4. **[중간] 반사형 XSS**, **.git 소스 코드 노출**, **로그인 속도 제한 없음**.\n\n## 권고\n- 백오피스 비밀번호를 강제로 변경하고 MFA 를 활성화하며 기본 비밀번호를 차단합니다.\n- search 엔드포인트에 파라미터화 쿼리를 적용하고 출력을 인코딩합니다.\n- API 에 객체 수준 권한 검증(IDOR)을 추가하고 강력한 JWT 키로 교체합니다.\n\n> (demo) 본 보고서는 mock 데이터로 생성되었으며 화면 데모용입니다."
   }
 }

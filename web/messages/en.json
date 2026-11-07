@@ -1906,7 +1906,13 @@
     "errorCount": "{count} errors",
     "loading": "Loading…",
     "loadOlder": "Load older logs",
-    "empty": "No logs."
+    "empty": "No logs.",
+    "mock": {
+      "plan": "task t-acme-web: planned 3 rounds, created intent i-4",
+      "scope": "block bash: out of scope, out.evil.example is outside the scope",
+      "saved": "report_finding: Default Credentials (high) saved",
+      "intercept": "intercept: mysqldump matched a destructive rule, awaiting human approval"
+    }
   },
   "mcpPage": {
     "subtitle": "External MCP tool servers · exposure allowed per agent",
@@ -2907,7 +2913,8 @@
       "renameFailed": "Rename failed: {msg}",
       "pinFailed": "Pin failed: {msg}",
       "unpinFailed": "Unpin failed: {msg}"
-    }
+    },
+    "agentFallback": "agent"
   },
   "linkTraffic": {
     "title": "Link to vulnerability",
@@ -3760,5 +3767,15 @@
       "name": "Vulnerability Retest",
       "description": "Launched manually from a finding's detail view; reads the original evidence and saves an independent retest conclusion."
     }
+  },
+  "apiErrors": {
+    "unauthorized": "Not authenticated",
+    "uploadFailed": "Upload failed: {status}",
+    "downloadFailed": "Download failed",
+    "downloadFailedStatus": "Download failed: {status}"
+  },
+  "mockData": {
+    "downloadSample": "(demo) Sample download content for {path}.",
+    "report": "# ARTEX Penetration Test Report: Acme Corp\n\n## Overview\n- Scope: acme.com (including the www / admin / api / shop / vpn subdomains)\n- Confirmed findings: 6 (3 high · 3 medium · 2 low)\n- Engine mode: exploring\n\n## Key findings\n1. **[High] Default back-office password** admin.acme.com admin/admin123 → the back office can be fully taken over.\n2. **[High] SQL injection** www.acme.com/search?q= → the acme_prod database can be read.\n3. **[High] IDOR** api.acme.com/v1/orders?id= → authorization can be bypassed to read other users' orders (including phone numbers and addresses).\n4. **[Medium] Reflected XSS**, **exposed .git source code**, **no login rate limiting**.\n\n## Recommendations\n- Force a back-office password change, enable MFA, and block default passwords.\n- Use parameterized queries on the search endpoint and encode output.\n- Add object-level authorization checks (IDOR) to the API and rotate to a strong JWT key.\n\n> (demo) This report was generated from mock data and is for screen demonstration only."
   }
 }

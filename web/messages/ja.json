@@ -1906,7 +1906,13 @@
     "errorCount": "エラー {count}",
     "loading": "読み込み中…",
     "loadOlder": "以前のログをさらに表示",
-    "empty": "ログがありません。"
+    "empty": "ログがありません。",
+    "mock": {
+      "plan": "task t-acme-web: 3ラウンド計画、インテント i-4 を生成",
+      "scope": "block bash: 範囲外、out.evil.example は scope 外",
+      "saved": "report_finding: Default Credentials (high) の保存完了",
+      "intercept": "intercept: mysqldump が破壊的ルールに該当、人手の承認待ち"
+    }
   },
   "mcpPage": {
     "subtitle": "外部 MCP ツールサーバー · エージェントごとに公開を許可",
@@ -2907,7 +2913,8 @@
       "renameFailed": "名前の変更に失敗しました: {msg}",
       "pinFailed": "固定に失敗しました: {msg}",
       "unpinFailed": "固定の解除に失敗しました: {msg}"
-    }
+    },
+    "agentFallback": "エージェント"
   },
   "linkTraffic": {
     "title": "脆弱性に関連付け",
@@ -3760,5 +3767,15 @@
       "name": "脆弱性の再検証",
       "description": "脆弱性の詳細から手動で開始し、元の証拠を読み取って、独立した再検証の結論を保存します。"
     }
+  },
+  "apiErrors": {
+    "unauthorized": "認証されていません",
+    "uploadFailed": "アップロードに失敗しました: {status}",
+    "downloadFailed": "ダウンロードに失敗しました",
+    "downloadFailedStatus": "ダウンロードに失敗しました: {status}"
+  },
+  "mockData": {
+    "downloadSample": "(demo) {path} のダウンロード内容の例です。",
+    "report": "# ARTEX ペネトレーションテストレポート: Acme Corp\n\n## 概要\n- 対象範囲: acme.com (www / admin / api / shop / vpn サブドメインを含む)\n- 確認済みの発見: 6件 (高リスク 3 · 中リスク 3 · 低リスク 2)\n- エンジンモード: exploring\n\n## 主な発見\n1. **[高] 管理画面の初期パスワード** admin.acme.com admin/admin123 → 管理画面を完全に掌握される恐れがあります。\n2. **[高] SQL インジェクション** www.acme.com/search?q= → acme_prod データベースを読み取られる恐れがあります。\n3. **[高] IDOR** api.acme.com/v1/orders?id= → 権限を回避して他人の注文(携帯電話番号・住所を含む)を読み取られる恐れがあります。\n4. **[中] 反射型 XSS**、**.git ソースコードの露出**、**ログインのレート制限なし**。\n\n## 推奨事項\n- 管理画面のパスワードを強制変更し、MFA を有効化し、初期パスワードを禁止します。\n- search エンドポイントにパラメータ化クエリを適用し、出力をエンコードします。\n- API にオブジェクトレベルの認可検証(IDOR 対策)を追加し、強力な JWT 鍵に交換します。\n\n> (demo) 本レポートはモックデータで生成されたもので、画面デモ用です。"
   }
 }

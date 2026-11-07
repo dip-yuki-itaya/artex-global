@@ -3,6 +3,7 @@
 // a few fields the backend serializes differently (e.g. created_at as a unix int)
 // are passed through and formatted at the call site.
 
+import { plainT } from "@/i18n/plain";
 import type { ChatMention } from "@/lib/chat-mentions";
 import { MOCK } from "@/lib/mock/enabled";
 import { mockHandle } from "@/lib/mock/handler";
@@ -140,7 +141,7 @@ export async function http<T>(path: string, init?: RequestInit): Promise<T> {
       document.cookie = "artex_token=; path=/; max-age=0";
       window.location.href = "/login";
     }
-    throw new Error("인증되지 않았습니다");
+    throw new Error(plainT("apiErrors.unauthorized"));
   }
   if (!r.ok) {
     const fallback = `${init?.method ?? "GET"} ${path}: ${r.status}`;
@@ -177,25 +178,7 @@ export async function http<T>(path: string, init?: RequestInit): Promise<T> {
 // Token is appended as ?token= because SSE can't carry cookies cross-origin.
 // mockReport returns a canned Markdown report for the demo.
 function mockReport(_task?: string): string {
-  return `# ARTEX 침투 테스트 보고서: Acme Corp
-
-## 개요
-- 범위: acme.com (www / admin / api / shop / vpn 서브도메인 포함)
-- 확인된 발견: 6건 (고위험 3 · 중위험 3 · 저위험 2)
-- 엔진 모드: exploring
-
-## 주요 발견
-1. **[높음] 백오피스 기본 비밀번호** admin.acme.com admin/admin123 → 백오피스를 완전히 장악할 수 있습니다.
-2. **[높음] SQL 인젝션** www.acme.com/search?q= → acme_prod 데이터베이스를 읽을 수 있습니다.
-3. **[높음] IDOR** api.acme.com/v1/orders?id= → 권한을 우회해 타인의 주문(휴대폰 번호/주소 포함)을 읽을 수 있습니다.
-4. **[중간] 반사형 XSS**, **.git 소스 코드 노출**, **로그인 속도 제한 없음**.
-
-## 권고
-- 백오피스 비밀번호를 강제로 변경하고 MFA 를 활성화하며 기본 비밀번호를 차단합니다.
-- search 엔드포인트에 파라미터화 쿼리를 적용하고 출력을 인코딩합니다.
-- API 에 객체 수준 권한 검증(IDOR)을 추가하고 강력한 JWT 키로 교체합니다.
-
-> (demo) 본 보고서는 mock 데이터로 생성되었으며 화면 데모용입니다.`;
+  return plainT("mockData.report");
 }
 
 export function sseUrl(path: string): string {
@@ -466,19 +449,19 @@ export const api = {
       headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       body: fd,
     });
-    if (!r.ok) throw new Error(`업로드 실패: ${r.status}`);
+    if (!r.ok) throw new Error(plainT("apiErrors.uploadFailed", { status: r.status }));
     return r.json() as Promise<{ uploaded: number }>;
   },
   workspaceDownload: async (path: string) => {
     let blob: Blob;
     if (MOCK) {
-      blob = new Blob([`(demo) ${path} 의 다운로드 내용 예시입니다.`], { type: "text/plain" });
+      blob = new Blob([plainT("mockData.downloadSample", { path })], { type: "text/plain" });
     } else {
       const token = getToken();
       const r = await fetch(`/api/workspace/download?path=${encodeURIComponent(path)}`, {
         headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       });
-      if (!r.ok) throw new Error(`다운로드 실패: ${r.status}`);
+      if (!r.ok) throw new Error(plainT("apiErrors.downloadFailedStatus", { status: r.status }));
       blob = await r.blob();
     }
     const objUrl = URL.createObjectURL(blob);
@@ -667,8 +650,8 @@ export const api = {
       { headers: token ? { Authorization: `Bearer ${token}` } : {} },
     );
     if (!response.ok) {
-      const error = await response.json().catch(() => ({ error: "다운로드 실패" }));
-      throw new Error(error.error ?? "다운로드 실패");
+      const error = await response.json().catch(() => ({ error: plainT("apiErrors.downloadFailed") }));
+      throw new Error(error.error ?? plainT("apiErrors.downloadFailed"));
     }
     const blob = await response.blob();
     const url = URL.createObjectURL(blob);
@@ -916,7 +899,7 @@ export const api = {
       headers: { ...(token ? { Authorization: `Bearer ${token}` } : {}) },
       body: fd,
     });
-    if (!r.ok) throw new Error(`업로드 실패: ${r.status} ${await r.text()}`);
+    if (!r.ok) throw new Error(`${plainT("apiErrors.uploadFailed", { status: r.status })} ${await r.text()}`);
     return r.json() as Promise<{ attachments: ChatAttachment[] }>;
   },
   stopChat: (taskId: string) => post<{ status: string }>(`/tasks/${taskId}/chat/stop`, {}),
@@ -1177,7 +1160,7 @@ export const api = {
       headers: token ? { Authorization: `Bearer ${token}` } : {},
     });
     const body = await r.json().catch(() => ({}));
-    if (!r.ok) throw new ApiError(body?.error || `업로드 실패(${r.status})`, r.status);
+    if (!r.ok) throw new ApiError(body?.error || plainT("apiErrors.uploadFailed", { status: r.status }), r.status);
     return body;
   },
   deleteSkill: (name: string) => del<{ deleted: string }>(`/skills/${name}`),

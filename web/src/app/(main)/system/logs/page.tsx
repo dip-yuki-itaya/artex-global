@@ -12,50 +12,52 @@ import type { LogLine } from "@/lib/types";
 import { cn } from "@/lib/utils";
 
 // Mock 데모: 백엔드 SSE 가 없으므로 예시 로그 몇 줄을 채워 둔다.
-const MOCK_LOGS: LogLine[] = [
-  {
-    seq: 1,
-    ts: "2026-07-26T03:55:00Z",
-    level: "info",
-    tag: "engine",
-    text: "ARTEX v0.1.0 backend listening on :8787 (workers=3)",
-  },
-  {
-    seq: 2,
-    ts: "2026-07-26T03:55:01Z",
-    level: "info",
-    tag: "config",
-    text: "LLM configured from DB: anthropic / claude-opus-4-8",
-  },
-  {
-    seq: 3,
-    ts: "2026-07-26T03:56:10Z",
-    level: "info",
-    tag: "planner",
-    text: "task t-acme-web: 계획 3라운드, 의도 i-4 생성",
-  },
-  {
-    seq: 4,
-    ts: "2026-07-26T03:57:00Z",
-    level: "warn",
-    tag: "guard",
-    text: "block bash: 범위 이탈, out.evil.example 는 scope 밖",
-  },
-  {
-    seq: 5,
-    ts: "2026-07-26T03:57:30Z",
-    level: "info",
-    tag: "work#1",
-    text: "report_finding: Default Credentials (high) 저장 완료",
-  },
-  {
-    seq: 6,
-    ts: "2026-07-26T03:58:20Z",
-    level: "error",
-    tag: "work#3",
-    text: "intercept: mysqldump 파괴적 규칙 적중, 사람 승인 대기",
-  },
-];
+function mockLogs(t: (key: string) => string): LogLine[] {
+  return [
+    {
+      seq: 1,
+      ts: "2026-07-26T03:55:00Z",
+      level: "info",
+      tag: "engine",
+      text: "ARTEX v0.1.0 backend listening on :8787 (workers=3)",
+    },
+    {
+      seq: 2,
+      ts: "2026-07-26T03:55:01Z",
+      level: "info",
+      tag: "config",
+      text: "LLM configured from DB: anthropic / claude-opus-4-8",
+    },
+    {
+      seq: 3,
+      ts: "2026-07-26T03:56:10Z",
+      level: "info",
+      tag: "planner",
+      text: t("mock.plan"),
+    },
+    {
+      seq: 4,
+      ts: "2026-07-26T03:57:00Z",
+      level: "warn",
+      tag: "guard",
+      text: t("mock.scope"),
+    },
+    {
+      seq: 5,
+      ts: "2026-07-26T03:57:30Z",
+      level: "info",
+      tag: "work#1",
+      text: t("mock.saved"),
+    },
+    {
+      seq: 6,
+      ts: "2026-07-26T03:58:20Z",
+      level: "error",
+      tag: "work#3",
+      text: t("mock.intercept"),
+    },
+  ];
+}
 
 const levelTone: Record<LogLine["level"], string> = {
   info: "text-foreground/80",
@@ -97,13 +99,16 @@ export default function LogsPage() {
     return min;
   }, [lines]);
 
+  // Mock 데모: 예시 로그를 현재 locale 로 채운다(언어를 바꾸면 다시 채운다). SSE 효과와 분리해
+  // 언어 전환이 실제 로그 스트림을 재연결시키지 않게 한다.
+  React.useEffect(() => {
+    if (MOCK) setLines(mockLogs(t));
+  }, [t]);
+
   // Live tail via SSE. on connect, replays whatever is in the ring (includes
   // DB-restored history from the last 100 rows written before restart).
   React.useEffect(() => {
-    if (MOCK) {
-      setLines(MOCK_LOGS);
-      return;
-    }
+    if (MOCK) return;
     const es = new EventSource(sseUrl("/api/logs/stream?since=0"));
     es.onmessage = (e) => {
       if (pausedRef.current) return;

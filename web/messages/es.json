@@ -1906,7 +1906,13 @@
     "errorCount": "{count} errores",
     "loading": "Cargando…",
     "loadOlder": "Cargar registros anteriores",
-    "empty": "No hay registros."
+    "empty": "No hay registros.",
+    "mock": {
+      "plan": "task t-acme-web: 3 rondas planificadas, intención i-4 creada",
+      "scope": "block bash: fuera de alcance, out.evil.example está fuera del scope",
+      "saved": "report_finding: Default Credentials (high) guardado",
+      "intercept": "intercept: mysqldump coincide con una regla destructiva, esperando aprobación humana"
+    }
   },
   "mcpPage": {
     "subtitle": "Servidores de herramientas MCP externos · exposición permitida por agente",
@@ -2907,7 +2913,8 @@
       "renameFailed": "Error al renombrar: {msg}",
       "pinFailed": "Error al fijar: {msg}",
       "unpinFailed": "Error al desfijar: {msg}"
-    }
+    },
+    "agentFallback": "agente"
   },
   "linkTraffic": {
     "title": "Vincular a vulnerabilidad",
@@ -3760,5 +3767,15 @@
       "name": "Reverificación de vulnerabilidad",
       "description": "Se inicia manualmente desde el detalle de un hallazgo; lee la evidencia original y guarda una conclusión de reverificación independiente."
     }
+  },
+  "apiErrors": {
+    "unauthorized": "No autenticado",
+    "uploadFailed": "Error al subir: {status}",
+    "downloadFailed": "Error al descargar",
+    "downloadFailedStatus": "Error al descargar: {status}"
+  },
+  "mockData": {
+    "downloadSample": "(demo) Contenido de descarga de ejemplo para {path}.",
+    "report": "# Informe de pruebas de penetración de ARTEX: Acme Corp\n\n## Resumen\n- Alcance: acme.com (incluye los subdominios www / admin / api / shop / vpn)\n- Hallazgos confirmados: 6 (3 altos · 3 medios · 2 bajos)\n- Modo del motor: exploring\n\n## Hallazgos principales\n1. **[Alto] Contraseña predeterminada del back-office** admin.acme.com admin/admin123 → se puede tomar el control total del back-office.\n2. **[Alto] Inyección SQL** www.acme.com/search?q= → se puede leer la base de datos acme_prod.\n3. **[Alto] IDOR** api.acme.com/v1/orders?id= → se puede eludir la autorización para leer pedidos de otros usuarios (incluidos teléfonos y direcciones).\n4. **[Medio] XSS reflejado**, **código fuente .git expuesto**, **sin límite de intentos de inicio de sesión**.\n\n## Recomendaciones\n- Forzar el cambio de la contraseña del back-office, activar MFA y bloquear las contraseñas predeterminadas.\n- Usar consultas parametrizadas en el endpoint search y codificar la salida.\n- Añadir verificación de autorización a nivel de objeto (IDOR) en la API y cambiar a una clave JWT robusta.\n\n> (demo) Este informe se generó con datos mock y es solo para demostración en pantalla."
   }
 }

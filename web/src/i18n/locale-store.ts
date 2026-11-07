@@ -42,6 +42,11 @@ function getServerSnapshot(): Locale {
   return resolveLocale();
 }
 
+// 훅을 쓸 수 없는 곳(lib·fetch 오류 문구)에서 현재 활성 언어를 한 번 읽는다. 구독하지 않는다.
+export function getActiveLocale(): Locale {
+  return typeof window === "undefined" ? resolveLocale() : getSnapshot();
+}
+
 // 활성 표시 언어를 구독하는 훅. 언어가 바뀌면 이 훅을 쓰는 컴포넌트가 다시 렌더링된다.
 export function useActiveLocale(): Locale {
   return React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
