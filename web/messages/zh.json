@@ -1906,7 +1906,13 @@
     "errorCount": "{count} 错误",
     "loading": "加载中…",
     "loadOlder": "加载更早日志",
-    "empty": "暂无日志。"
+    "empty": "暂无日志。",
+    "mock": {
+      "plan": "task t-acme-web: 规划 3 轮,生成意图 i-4",
+      "scope": "block bash: 超出范围,out.evil.example 不在 scope 内",
+      "saved": "report_finding: Default Credentials (high) 已保存",
+      "intercept": "intercept: mysqldump 命中破坏性规则,等待人工审批"
+    }
   },
   "mcpPage": {
     "subtitle": "外部 MCP 工具服务器 · 按 Agent 授权可见",
@@ -2907,7 +2913,8 @@
       "renameFailed": "重命名失败：{msg}",
       "pinFailed": "置顶失败：{msg}",
       "unpinFailed": "取消置顶失败：{msg}"
-    }
+    },
+    "agentFallback": "智能体"
   },
   "linkTraffic": {
     "title": "关联到漏洞",
@@ -3760,5 +3767,15 @@
       "name": "漏洞复测",
       "description": "从漏洞详情手动启动，读取原证据并保存独立复测结论。"
     }
+  },
+  "apiErrors": {
+    "unauthorized": "未认证",
+    "uploadFailed": "上传失败: {status}",
+    "downloadFailed": "下载失败",
+    "downloadFailedStatus": "下载失败: {status}"
+  },
+  "mockData": {
+    "downloadSample": "(demo) {path} 的下载内容示例。",
+    "report": "# ARTEX 渗透测试报告: Acme Corp\n\n## 概述\n- 范围: acme.com (含 www / admin / api / shop / vpn 子域名)\n- 已确认发现: 6 项 (高危 3 · 中危 3 · 低危 2)\n- 引擎模式: exploring\n\n## 主要发现\n1. **[高] 后台默认密码** admin.acme.com admin/admin123 → 可完全接管后台。\n2. **[高] SQL 注入** www.acme.com/search?q= → 可读取 acme_prod 数据库。\n3. **[高] IDOR** api.acme.com/v1/orders?id= → 可绕过权限读取他人订单(含手机号/地址)。\n4. **[中] 反射型 XSS**、**.git 源码泄露**、**登录无速率限制**。\n\n## 建议\n- 强制修改后台密码,启用 MFA,并禁止使用默认密码。\n- 对 search 接口使用参数化查询并对输出编码。\n- 为 API 增加对象级权限校验(IDOR),并更换为强 JWT 密钥。\n\n> (demo) 本报告由 mock 数据生成,仅用于界面演示。"
   }
 }
